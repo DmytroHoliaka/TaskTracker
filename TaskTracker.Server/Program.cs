@@ -8,10 +8,25 @@ namespace TaskTracker.Server
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddDbContext<TaskTrackerContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("TaskTrackerContext") ?? throw new InvalidOperationException("Connection string 'TaskTrackerContext' not found.")));
+            builder.Services.AddDbContext<TaskTrackerContext>(
+                options =>
+                    options.UseSqlServer(
+                        builder.Configuration.GetConnectionString("TaskTrackerContext") ??
+                        throw new InvalidOperationException("Connection string 'TaskTrackerContext' not found.")));
 
             // Add services to the container.
+            builder.Services.AddCors(
+                options =>
+                {
+                    options.AddPolicy(
+                        "AllowAll",
+                        builder =>
+                        {
+                            builder.AllowAnyOrigin()
+                                .AllowAnyMethod()
+                                .AllowAnyHeader();
+                        });
+                });
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -31,6 +46,8 @@ namespace TaskTracker.Server
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors("AllowAll");
 
             app.UseAuthorization();
 
