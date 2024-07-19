@@ -1,7 +1,9 @@
+import States from "./States"
+
 interface TodoItem{
     id: number;
     title: string;
-    status: 'todo' | 'in progres' | 'done';
+    state: States
 }
 
 export default TodoItem;

@@ -1,11 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import InputForm from "./components/InputForm";
 import TodoItem from "./models/TodoItem";
 import TodoList from "./components/TodoList";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { fetchTasks } from "./services/requests";
+import States from "./models/States";
 
 const App: React.FC = () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      let allTasks: TodoItem[] = await fetchTasks();
+
+      const inProgress: TodoItem[] = [];
+      const done: TodoItem[] = [];
+      const todo: TodoItem[] = [];
+
+      allTasks.forEach((task) => {
+        if (task.state === States.Todo) {
+          todo.push(task);
+        } else if (task.state === States.InProgress) {
+          inProgress.push(task);
+        } else if (task.state === States.Done) {
+          done.push(task);
+        } else {
+          console.log(
+            `Getting an incorrect state when retrieving tasks from the database (state: ${task.state})`
+          );
+        }
+      });
+
+      setInProgressTasks(inProgress);
+      setDoneTasks(done);
+      setTodoTasks(todo);
+    };
+
+    fetchData();
+  }, []);
+
   const [newTaskTitle, setNewTaskTitle] = useState<string>("");
   const [todoTasks, setTodoTasks] = useState<TodoItem[]>([]);
   const [inProgressTasks, setInProgressTasks] = useState<TodoItem[]>([]);
@@ -17,7 +49,7 @@ const App: React.FC = () => {
     if (newTaskTitle) {
       setTodoTasks([
         ...todoTasks,
-        { id: Date.now(), title: newTaskTitle, status: "todo" },
+        { id: Date.now(), title: newTaskTitle, state: States.Todo },
       ]);
       setNewTaskTitle("");
     }
