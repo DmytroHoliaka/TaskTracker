@@ -166,9 +166,17 @@
   border-radius: 5px;
   border: none;
 
-  box-shadow: inset 1px 1px 6px 1px rgba(0, 0, 0, 0.25); 
+  box-shadow: inset 1px 1px 6px 1px rgba(0, 0, 0, 0.25);
 }
 
 .edit-input:focus {
   outline: none;
+}
+
+.drag-over-todo, .drag-over-in-progress, .drag-over-done {
+  background-color: rgb(139, 82, 163);
+}
+
+.drag {
+  box-shadow: inset 0px 0px 15px 0px rgba(0, 0, 0, 1);
 }

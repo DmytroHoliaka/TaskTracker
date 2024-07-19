@@ -1,6 +1,5 @@
 import React, { useRef } from "react";
 import "./styles.css";
-import TodoItem from "../models/TodoItem";
 
 interface Props {
   taskTitle: string;
