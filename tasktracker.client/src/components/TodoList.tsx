@@ -25,7 +25,7 @@ const TodoList: React.FC<Props> = ({
         <span className="list-title">To do</span>
         <div className="task-block">
           {todoTasks.map((task) => (
-            <SingleTodo task={task} />
+            <SingleTodo task={task} tasks={todoTasks} setTasks={setTodoTasks} />
           ))}
         </div>
       </div>
@@ -33,8 +33,12 @@ const TodoList: React.FC<Props> = ({
       <div className="status-block">
         <span className="list-title">In progress</span>
         <div className="task-block">
-          {todoTasks.map((task) => (
-            <SingleTodo task={task} />
+          {inProgressTasks.map((task) => (
+            <SingleTodo
+              task={task}
+              tasks={inProgressTasks}
+              setTasks={setInProgressTasks}
+            />
           ))}
         </div>
       </div>
@@ -42,8 +46,8 @@ const TodoList: React.FC<Props> = ({
       <div className="status-block">
         <span className="list-title">Done</span>
         <div className="task-block">
-          {todoTasks.map((task) => (
-            <SingleTodo task={task} />
+          {doneTasks.map((task) => (
+            <SingleTodo task={task} tasks={doneTasks} setTasks={setDoneTasks} />
           ))}
         </div>
       </div>

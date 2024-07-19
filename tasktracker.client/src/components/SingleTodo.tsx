@@ -1,20 +1,63 @@
-import React from "react";
+import React, { useState } from "react";
 import TodoItem from "../models/TodoItem";
 import { MdDelete, MdEdit } from "react-icons/md";
+import "./styles.css";
 
 interface Props {
   task: TodoItem;
+  tasks: TodoItem[];
+  setTasks: React.Dispatch<React.SetStateAction<TodoItem[]>>;
 }
 
-const SingleTodo: React.FC<Props> = ({ task }) => {
+const SingleTodo: React.FC<Props> = ({ task, tasks, setTasks }) => {
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [newTitle, setNewTitle] = useState<string>(task.title);
+
+  const handleEdit = (e: React.FormEvent): void => {
+    e?.preventDefault();
+
+    setTasks(
+      tasks.map((t) => (t.id === task.id ? { ...t, title: newTitle } : t))
+    );
+
+    setIsEditMode(false);
+  };
+
+  const handleDelete = (): void => {
+    setTasks(tasks.filter((t) => t.id !== task.id));
+  };
+
   return (
-    <div className="task-item">
-      <div className="task-title">{task.title}</div>
+    <form className="task-item" onSubmit={(e) => handleEdit(e)}>
+      {isEditMode ? (
+        <input
+          type="text"
+          value={newTitle}
+          placeholder="Edit new task..."
+          onChange={(e) => setNewTitle(e.target.value)}
+          className="edit-input"
+        ></input>
+      ) : (
+        <div className="task-title">{task.title}</div>
+      )}
       <div className="icons">
-        <div className="icon">{<MdEdit />}</div>
-        <div className="icon">{<MdDelete />}</div>
+        <span
+          onClick={(e) => {
+            if (isEditMode === false) {
+              setIsEditMode(true);
+            } else {
+              handleEdit(e);
+            }
+          }}
+          className="icon"
+        >
+          {<MdEdit />}
+        </span>
+        <span onClick={() => handleDelete()} className="icon">
+          {<MdDelete />}
+        </span>
       </div>
-    </div>
+    </form>
   );
 };
 
