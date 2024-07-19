@@ -7,18 +7,18 @@ namespace TaskTracker.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ToDoItemsController(TaskTrackerContext context) : ControllerBase
+    public class TodoItemsController(TaskTrackerContext context) : ControllerBase
     {
         // GET: api/ToDoItems
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ToDoItem>>> GetToDoItem()
+        public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItems()
         {
             return await context.ToDoItems.ToListAsync();
         }
 
         // GET: api/ToDoItems/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ToDoItem>> GetToDoItem(int id)
+        public async Task<ActionResult<TodoItem>> GetTodoItem(int id)
         {
             var toDoItem = await context.ToDoItems.FindAsync(id);
 
@@ -33,7 +33,7 @@ namespace TaskTracker.Server.Controllers
         // PUT: api/ToDoItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutToDoItem(int id, ToDoItem toDoItem)
+        public async Task<IActionResult> PutTodoItem(int id, TodoItem toDoItem)
         {
             if (id != toDoItem.Id)
             {
@@ -64,7 +64,7 @@ namespace TaskTracker.Server.Controllers
         // POST: api/ToDoItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ToDoItem>> PostToDoItem(ToDoItem toDoItem)
+        public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem toDoItem)
         {
             context.ToDoItems.Add(toDoItem);
             await context.SaveChangesAsync();
@@ -74,7 +74,7 @@ namespace TaskTracker.Server.Controllers
 
         // DELETE: api/ToDoItems/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteToDoItem(int id)
+        public async Task<IActionResult> DeleteTodoItem(int id)
         {
             var toDoItem = await context.ToDoItems.FindAsync(id);
             if (toDoItem == null)

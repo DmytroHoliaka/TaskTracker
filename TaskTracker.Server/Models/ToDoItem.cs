@@ -1,9 +1,11 @@
-﻿namespace TaskTracker.Server.Models;
+﻿using TaskTracker.Server.Service;
 
-public class ToDoItem
+namespace TaskTracker.Server.Models;
+
+// ToDo: Add validation in API for 0, 1 and 2 states
+public class TodoItem
 {   
-    // ToDo: Change using enum
     public int Id { get; set; }
     public string Title { get; set; }
-    public string Status { get; set; } = "ToDo";
+    public States State { get; set; } = States.Todo;
 }
