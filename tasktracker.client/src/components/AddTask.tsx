@@ -11,7 +11,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onTaskAdded }) => {
     const handleAddTask = async () => {
         if (title) {
             try {
-                await axios.post('/api/ToDoItems', { title, status: 'ToDo' });
+                await axios.post('https://localhost:7068/api/ToDoItems', { title, status: 'ToDo' });
                 setTitle('');
                 onTaskAdded();
             } catch (error) {

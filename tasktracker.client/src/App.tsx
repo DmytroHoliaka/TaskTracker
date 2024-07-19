@@ -11,7 +11,7 @@ const App: React.FC = () => {
 
     const fetchTasks = async () => {
         try {
-            const response = await axios.get('/api/ToDoItems');
+            const response = await axios.get('https://localhost:7068/api/ToDoItems');
             if (Array.isArray(response.data)) {
                 setTasks(response.data);
             } else {
@@ -50,7 +50,7 @@ const App: React.FC = () => {
         movedTask.status = destination.droppableId;
 
         setTasks(updatedTasks);
-        await axios.put(`/api/ToDoItems/${movedTask.id}`, movedTask);
+        await axios.put(`https://localhost:7068/api/ToDoItems/${movedTask.id}`, movedTask);
     };
 
     return (

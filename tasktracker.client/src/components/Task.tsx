@@ -11,7 +11,7 @@ interface TaskProps {
 
 const Task: React.FC<TaskProps> = ({ task, index, onDelete }) => {
     const handleDelete = async () => {
-        await axios.delete(`/api/ToDoItems/${task.id}`);
+        await axios.delete(`https://localhost:7068/api/ToDoItems/${task.id}`);
         onDelete(task.id);
     };
 
