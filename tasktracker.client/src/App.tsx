@@ -1,77 +1,53 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { DragDropContext, DropResult } from 'react-beautiful-dnd';
-import AddTask from './components/AddTask';
-import Column from './components/Column';
-import { ToDoItem } from './types';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import InputForm from "./components/InputForm";
+import TodoItem from "./models/TodoItem";
+import TodoList from "./components/TodoList";
 
 const App: React.FC = () => {
-    const [tasks, setTasks] = useState<ToDoItem[]>([]);
+  const [newTaskTitle, setNewTaskTitle] = useState<string>("");
+  const [todoTasks, setTodoTasks] = useState<TodoItem[]>([]);
+  const [inProgressTasks, setInProgressTasks] = useState<TodoItem[]>([]);
+  const [doneTasks, setDoneTasks] = useState<TodoItem[]>([]);
 
-    const fetchTasks = async () => {
-        try {
-            const response = await axios.get('https://localhost:7068/api/ToDoItems');
-            if (Array.isArray(response.data)) {
-                setTasks(response.data);
-            } else {
-                console.error('Unexpected response data:', response.data);
-                setTasks([]);
-            }
-        } catch (error) {
-            console.error('Error fetching tasks:', error);
-            setTasks([]);
-        }
-    };
+  const handleCreate = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
 
-    useEffect(() => {
-        fetchTasks();
-    }, []);
+    if (newTaskTitle) {
+      setTodoTasks([
+        ...todoTasks,
+        { id: Date.now(), title: newTaskTitle, status: "todo" },
+      ]);
+      setNewTaskTitle("");
+    }
+  };
 
-    const handleTaskAdded = () => {
-        fetchTasks();
-    };
-
-    const handleTaskDeleted = (id: number) => {
-        setTasks(tasks.filter(task => task.id !== id));
-    };
-
-    const handleDragEnd = async (result: DropResult) => {
-        const { destination, source, draggableId } = result;
-
-        if (!destination) return;
-
-        if (destination.droppableId === source.droppableId && destination.index === source.index) {
-            return;
-        }
-
-        const updatedTasks = Array.from(tasks);
-        const movedTask = updatedTasks.find(task => task.id === parseInt(draggableId))!;
-        movedTask.status = destination.droppableId;
-
-        setTasks(updatedTasks);
-        await axios.put(`https://localhost:7068/api/ToDoItems/${movedTask.id}`, movedTask);
-    };
-
-    return (
-        <div className="App">
-            <div className="header">
-                <AddTask onTaskAdded={handleTaskAdded} />
-            </div>
-            <DragDropContext onDragEnd={handleDragEnd}>
-                <div className="columns">
-                    {['ToDo', 'In progress', 'Done'].map(status => (
-                        <Column
-                            key={status}
-                            title={status}
-                            tasks={tasks.filter(task => task.status === status)}
-                            onDelete={handleTaskDeleted}
-                        />
-                    ))}
-                </div>
-            </DragDropContext>
+  return (
+    <div className="app">
+      <div className="upper-container">
+        <div className="header-block">
+          <span className="header">Task Tracker</span>
         </div>
-    );
+        <div className="input-block">
+          <InputForm
+            taskTitle={newTaskTitle}
+            setTaskTitle={setNewTaskTitle}
+            handleCreate={handleCreate}
+          />
+        </div>
+      </div>
+      <div className="lower-container">
+        <TodoList
+          todoTasks={todoTasks}
+          setTodoTasks={setTodoTasks}
+          inProgressTasks={inProgressTasks}
+          setInProgressTasks={setInProgressTasks}
+          doneTasks={doneTasks}
+          setDoneTasks={setDoneTasks}
+        />
+      </div>
+    </div>
+  );
 };
 
 export default App;
