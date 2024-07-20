@@ -15,4 +15,41 @@ export const fetchTasks = async (): Promise<TodoItem[]> => {
   }
 };
 
-export const DeleteTask = async (id: number): Promise<void> => {};
+export const DeleteTask = async (id: string): Promise<boolean> => {
+  try {
+    await axios.delete(`https://localhost:7068/api/TodoItems/${id}`);
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};
+
+export const CreateTask = async (task: TodoItem): Promise<boolean> => {
+  try {
+    await axios.post("https://localhost:7068/api/TodoItems", {
+      id: task.id,
+      title: task.title,
+      state: task.state,
+    });
+
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};
+
+export const UpdateTask = async (id: string, task: TodoItem): Promise<boolean> => {
+  try {
+    await axios.put(`https://localhost:7068/api/TodoItems/${id}`, {
+      id: task.id,
+      title: task.title,
+      state: task.state,
+    });
+
+    return true;
+  } catch (e) {
+    return false;
+  }
+};

@@ -3,6 +3,7 @@ import TodoItem from "../models/TodoItem";
 import { MdDelete, MdEdit } from "react-icons/md";
 import "./styles.css";
 import { Draggable } from "react-beautiful-dnd";
+import { DeleteTask, UpdateTask } from "../services/requests";
 
 interface Props {
   arrayIndex: number;
@@ -15,18 +16,28 @@ const SingleTodo: React.FC<Props> = ({ arrayIndex, task, tasks, setTasks }) => {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [newTitle, setNewTitle] = useState<string>(task.title);
 
-  const handleEdit = (e: React.FormEvent): void => {
-    e?.preventDefault();
+  const handleEdit = async (e: React.FormEvent): Promise<void> => {
+    e.preventDefault();
 
-    setTasks(
-      tasks.map((t) => (t.id === task.id ? { ...t, title: newTitle } : t))
-    );
+    const newTask: TodoItem = {
+      id: task.id,
+      title: newTitle,
+      state: task.state
+    };
 
-    setIsEditMode(false);
+    if (task.title !== newTask.title && await UpdateTask(newTask.id, newTask)){
+      setTasks(
+        tasks.map((t) => (t.id === task.id ? newTask : t))
+      );
+  
+      setIsEditMode(false);
+    }
   };
 
-  const handleDelete = (): void => {
-    setTasks(tasks.filter((t) => t.id !== task.id));
+  const handleDelete = async (): Promise<void> => {
+    if (await DeleteTask(task.id)){
+      setTasks(tasks.filter((t) => t.id !== task.id));
+    }
   };
 
   return (

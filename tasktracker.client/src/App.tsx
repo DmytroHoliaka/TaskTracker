@@ -4,7 +4,7 @@ import InputForm from "./components/InputForm";
 import TodoItem from "./models/TodoItem";
 import TodoList from "./components/TodoList";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
-import { fetchTasks } from "./services/requests";
+import { CreateTask, fetchTasks, UpdateTask } from "./services/requests";
 import States from "./models/States";
 
 const App: React.FC = () => {
@@ -23,10 +23,6 @@ const App: React.FC = () => {
           inProgress.push(task);
         } else if (task.state === States.Done) {
           done.push(task);
-        } else {
-          console.log(
-            `Getting an incorrect state when retrieving tasks from the database (state: ${task.state})`
-          );
         }
       });
 
@@ -43,19 +39,24 @@ const App: React.FC = () => {
   const [inProgressTasks, setInProgressTasks] = useState<TodoItem[]>([]);
   const [doneTasks, setDoneTasks] = useState<TodoItem[]>([]);
 
-  const handleCreate = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleCreate = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
 
-    if (newTaskTitle) {
-      setTodoTasks([
-        ...todoTasks,
-        { id: Date.now(), title: newTaskTitle, state: States.Todo },
-      ]);
+    const newTask: TodoItem = {
+      id: crypto.randomUUID(),
+      title: newTaskTitle,
+      state: States.Todo,
+    };
+
+    if (newTaskTitle && (await CreateTask(newTask))) {
+      setTodoTasks([...todoTasks, newTask]);
       setNewTaskTitle("");
     }
   };
 
-  const onDragEnd = (result: DropResult): void => {
+  const onDragEnd = async (result: DropResult): Promise<void> => {
     const { destination, source } = result;
 
     if (!destination) {
@@ -69,33 +70,61 @@ const App: React.FC = () => {
       return;
     }
 
-    let add;
-    let todo = todoTasks;
-    let inProgress = inProgressTasks;
-    let done = doneTasks;
+    let initialTask;
+    let newTask;
+    let newState;
+
+    let initialTodo = [...todoTasks];
+    let initialInProgress = [...inProgressTasks];
+    let initialDone = [...doneTasks];
+
+    let todo = [...todoTasks];
+    let inProgress = [...inProgressTasks];
+    let done = [...doneTasks];
 
     if (source.droppableId === "TodoBlock") {
-      add = todo[source.index];
+      initialTask = todo[source.index];
       todo.splice(source.index, 1);
     } else if (source.droppableId === "InProgressBlock") {
-      add = inProgress[source.index];
+      initialTask = inProgress[source.index];
       inProgress.splice(source.index, 1);
     } else {
-      add = done[source.index];
+      initialTask = done[source.index];
       done.splice(source.index, 1);
     }
 
     if (destination.droppableId === "TodoBlock") {
-      todo.splice(destination.index, 0, add);
+      todo.splice(destination.index, 0, initialTask);
+      newState = States.Todo;
     } else if (destination.droppableId === "InProgressBlock") {
-      inProgress.splice(destination.index, 0, add);
+      inProgress.splice(destination.index, 0, initialTask);
+      newState = States.InProgress;
     } else {
-      done.splice(destination.index, 0, add);
+      done.splice(destination.index, 0, initialTask);
+      newState = States.Done;
     }
 
-    setTodoTasks(todo);
-    setInProgressTasks(inProgress);
-    setDoneTasks(done);
+    newTask = {
+      id: initialTask.id,
+      title: initialTask.title,
+      state: newState,
+    };
+
+    let shouldSwap = true;
+
+    if (initialTask.state !== newTask.state){
+      shouldSwap = await UpdateTask(newTask.id, newTask);
+    }
+
+    if (shouldSwap) {
+      setTodoTasks(todo);
+      setInProgressTasks(inProgress);
+      setDoneTasks(done);
+    } else {
+      setTodoTasks(initialTodo);
+      setInProgressTasks(initialInProgress);
+      setDoneTasks(initialDone);
+    }
   };
 
   return (

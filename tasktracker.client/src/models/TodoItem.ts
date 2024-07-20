@@ -1,7 +1,7 @@
 import States from "./States"
 
 interface TodoItem{
-    id: number;
+    id: string;
     title: string;
     state: States
 }
