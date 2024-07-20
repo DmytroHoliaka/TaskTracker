@@ -5,7 +5,7 @@ namespace TaskTracker.Server.Models;
 // ToDo: Add validation in API for 0, 1 and 2 states
 public class TodoItem
 {   
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string Title { get; set; }
     public States State { get; set; } = States.Todo;
 }

@@ -18,7 +18,7 @@ namespace TaskTracker.Server.Controllers
 
         // GET: api/ToDoItems/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TodoItem>> GetTodoItem(int id)
+        public async Task<ActionResult<TodoItem>> GetTodoItem(Guid id)
         {
             var toDoItem = await context.ToDoItems.FindAsync(id);
 
@@ -31,9 +31,8 @@ namespace TaskTracker.Server.Controllers
         }
 
         // PUT: api/ToDoItems/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodoItem(int id, TodoItem toDoItem)
+        public async Task<IActionResult> PutTodoItem(Guid id, TodoItem toDoItem)
         {
             if (id != toDoItem.Id)
             {
@@ -74,7 +73,7 @@ namespace TaskTracker.Server.Controllers
 
         // DELETE: api/ToDoItems/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTodoItem(int id)
+        public async Task<IActionResult> DeleteTodoItem(Guid id)
         {
             var toDoItem = await context.ToDoItems.FindAsync(id);
             if (toDoItem == null)
@@ -88,7 +87,7 @@ namespace TaskTracker.Server.Controllers
             return NoContent();
         }
 
-        private bool ToDoItemExists(int id)
+        private bool ToDoItemExists(Guid id)
         {
             return context.ToDoItems.Any(e => e.Id == id);
         }
