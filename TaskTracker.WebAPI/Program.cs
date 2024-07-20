@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using TaskTracker.BLL.Abstractions;
 using TaskTracker.DAL.EntityFramework;
 
@@ -30,6 +31,12 @@ public abstract class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        builder.Services.AddLogging(loggingBuilder =>
+            loggingBuilder.AddSerilog());
+
+        builder.Host.UseSerilog((context, configuration) =>
+            configuration.ReadFrom.Configuration(context.Configuration));
 
         var app = builder.Build();
 

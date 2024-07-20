@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using TaskTracker.BLL.Abstractions;
 using TaskTracker.BLL.Models;
@@ -7,7 +8,7 @@ namespace TaskTracker.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TodoItemsController(IUnitOfWork unitOfWork) : ControllerBase
+    public class TodoItemsController(IUnitOfWork unitOfWork, ILogger<TodoItemsController> logger) : ControllerBase
     {
         // GET: api/ToDoItems
         [HttpGet]
@@ -20,7 +21,7 @@ namespace TaskTracker.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                // ToDo: Add logging
+                logger.LogError(ex, "An error occurred while retrieving todo items.");
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
             
@@ -41,9 +42,9 @@ namespace TaskTracker.WebAPI.Controllers
 
                 return Ok(item);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // ToDo: Add logging
+                logger.LogError(ex, "An error occurred while retrieving the todo item with Id {Id}.", id);
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
@@ -70,13 +71,12 @@ namespace TaskTracker.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                // ToDo: Add logging
+                logger.LogError(ex, "An error occurred while updating the todo item with Id {Id}.", id);
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
 
         // POST: api/ToDoItems
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem todoItem)
         {
@@ -93,7 +93,7 @@ namespace TaskTracker.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                // ToDo: Add logging
+                logger.LogError(ex, "An error occurred while creating a new todo item.");
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
@@ -117,7 +117,7 @@ namespace TaskTracker.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                // ToDo: Add logging
+                logger.LogError(ex, "An error occurred while deleting the todo item with ID {Id}.", id);
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
