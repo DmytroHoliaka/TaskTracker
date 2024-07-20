@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskTracker.Server", "TaskTracker.Server\TaskTracker.Server.csproj", "{E2E2B532-A32A-47B6-9F51-BC683DE9E0D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskTracker.WebAPI", "TaskTracker.WebAPI\TaskTracker.WebAPI.csproj", "{E2E2B532-A32A-47B6-9F51-BC683DE9E0D5}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "tasktracker.client", "tasktracker.client\tasktracker.client.esproj", "{A5C94BA6-1B0F-4FFB-86B0-D65F7DD9C18A}"
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "TaskTracker.UI", "TaskTracker.UI\TaskTracker.UI.esproj", "{A5C94BA6-1B0F-4FFB-86B0-D65F7DD9C18A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

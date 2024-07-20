@@ -1,6 +1,6 @@
-﻿using TaskTracker.Server.Service;
+﻿using TaskTracker.WebAPI.Service;
 
-namespace TaskTracker.Server.Models;
+namespace TaskTracker.WebAPI.Models;
 
 // ToDo: Add validation in API for 0, 1 and 2 states
 public class TodoItem

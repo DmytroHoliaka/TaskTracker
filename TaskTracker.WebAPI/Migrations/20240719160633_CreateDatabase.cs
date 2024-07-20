@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace TaskTracker.Server.Migrations
+namespace TaskTracker.WebAPI.Migrations
 {
     /// <inheritdoc />
     public partial class CreateDatabase : Migration

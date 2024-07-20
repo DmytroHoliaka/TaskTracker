@@ -1,4 +1,4 @@
-﻿namespace TaskTracker.Server.Service;
+﻿namespace TaskTracker.WebAPI.Service;
 
 public enum States
 {

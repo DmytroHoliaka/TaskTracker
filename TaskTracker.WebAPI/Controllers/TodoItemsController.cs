@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TaskTracker.Server.Data;
-using TaskTracker.Server.Models;
+using TaskTracker.WebAPI.Data;
+using TaskTracker.WebAPI.Models;
 
-namespace TaskTracker.Server.Controllers
+namespace TaskTracker.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

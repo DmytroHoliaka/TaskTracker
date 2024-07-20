@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using TaskTracker.Server.Data;
+using TaskTracker.WebAPI.Data;
 
-namespace TaskTracker.Server;
+namespace TaskTracker.WebAPI;
 
 public abstract class Program
 {
