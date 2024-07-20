@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TaskTracker.WebAPI.Data;
+using TaskTracker.DAL.EntityFramework;
 
 #nullable disable
 
-namespace TaskTracker.WebAPI.Migrations
+namespace TaskTracker.DAL.EntityFramework.Migrations
 {
     [DbContext(typeof(TaskTrackerContext))]
     partial class TaskTrackerContextModelSnapshot : ModelSnapshot
@@ -22,7 +22,7 @@ namespace TaskTracker.WebAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("TaskTracker.WebAPI.Models.TodoItem", b =>
+            modelBuilder.Entity("TaskTracker.BLL.Models.TodoItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

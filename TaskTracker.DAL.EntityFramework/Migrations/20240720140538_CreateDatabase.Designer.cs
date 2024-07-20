@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TaskTracker.WebAPI.Data;
+using TaskTracker.DAL.EntityFramework;
 
 #nullable disable
 
-namespace TaskTracker.WebAPI.Migrations
+namespace TaskTracker.DAL.EntityFramework.Migrations
 {
     [DbContext(typeof(TaskTrackerContext))]
-    [Migration("20240719160633_CreateDatabase")]
+    [Migration("20240720140538_CreateDatabase")]
     partial class CreateDatabase
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace TaskTracker.WebAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("TaskTracker.WebAPI.Models.TodoItem", b =>
+            modelBuilder.Entity("TaskTracker.BLL.Models.TodoItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

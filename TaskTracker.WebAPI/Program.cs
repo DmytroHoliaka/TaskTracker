@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using TaskTracker.WebAPI.Data;
+using TaskTracker.BLL.Abstractions;
+using TaskTracker.DAL.EntityFramework;
 
 namespace TaskTracker.WebAPI;
 
@@ -14,7 +15,6 @@ public abstract class Program
                     builder.Configuration.GetConnectionString("TaskTrackerContext") ??
                     throw new InvalidOperationException("Connection string 'TaskTrackerContext' not found.")));
 
-        // Add services to the container.
         builder.Services.AddCors(options =>
         {
             options.AddDefaultPolicy(
@@ -27,16 +27,15 @@ public abstract class Program
         });
 
         builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         var app = builder.Build();
 
         app.UseDefaultFiles();
         app.UseStaticFiles();
 
-        // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();

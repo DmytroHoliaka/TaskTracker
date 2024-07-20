@@ -1,95 +1,125 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TaskTracker.WebAPI.Data;
-using TaskTracker.WebAPI.Models;
+using TaskTracker.BLL.Abstractions;
+using TaskTracker.BLL.Models;
 
 namespace TaskTracker.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TodoItemsController(TaskTrackerContext context) : ControllerBase
+    public class TodoItemsController(IUnitOfWork unitOfWork) : ControllerBase
     {
         // GET: api/ToDoItems
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItems()
         {
-            return await context.ToDoItems.ToListAsync();
+            try
+            {
+                IEnumerable<TodoItem> items = await unitOfWork.TodoItemRepository.GetAllAsync();
+                return Ok(items);
+            }
+            catch (Exception ex)
+            {
+                // ToDo: Add logging
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+            
         }
 
         // GET: api/ToDoItems/5
         [HttpGet("{id}")]
         public async Task<ActionResult<TodoItem>> GetTodoItem(Guid id)
         {
-            var toDoItem = await context.ToDoItems.FindAsync(id);
-
-            if (toDoItem == null)
+            try
             {
-                return NotFound();
-            }
+                TodoItem? item = await unitOfWork.TodoItemRepository.GetByIdAsync(id);
 
-            return toDoItem;
+                if (item is null)
+                {
+                    return NotFound($"Todo item with Id {id} not found.");
+                }
+
+                return Ok(item);
+            }
+            catch (Exception)
+            {
+                // ToDo: Add logging
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+            }
         }
 
         // PUT: api/ToDoItems/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodoItem(Guid id, TodoItem toDoItem)
+        public async Task<IActionResult> PutTodoItem(Guid id, TodoItem todoItem)
         {
-            if (id != toDoItem.Id)
+            if (id != todoItem.Id)
             {
-                return BadRequest();
+                return BadRequest("Id in the URL doesn't match the Id in the payload.");
             }
 
-            context.Entry(toDoItem).State = EntityState.Modified;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
             try
             {
-                await context.SaveChangesAsync();
+                await unitOfWork.TodoItemRepository.UpdateAsync(todoItem);
+                await unitOfWork.CommitAsync();
+                return NoContent();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!ToDoItemExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                // ToDo: Add logging
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
-
-            return NoContent();
         }
 
         // POST: api/ToDoItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem toDoItem)
+        public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem todoItem)
         {
-            context.ToDoItems.Add(toDoItem);
-            await context.SaveChangesAsync();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);  // ToDo: Check does IsValid works correctly in ASP.NET Web API
+            }
 
-            return CreatedAtAction("GetTodoItem", new { id = toDoItem.Id }, toDoItem);
+            try
+            {
+                await unitOfWork.TodoItemRepository.CreateAsync(todoItem);
+                await unitOfWork.CommitAsync();
+                return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
+            }
+            catch (Exception ex)
+            {
+                // ToDo: Add logging
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+            }
         }
 
         // DELETE: api/ToDoItems/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTodoItem(Guid id)
         {
-            var toDoItem = await context.ToDoItems.FindAsync(id);
-            if (toDoItem == null)
+            try
             {
-                return NotFound();
+                TodoItem? itemToDelete = await unitOfWork.TodoItemRepository.GetByIdAsync(id);
+
+                if (itemToDelete is null)
+                {
+                    return NotFound($"Todo item with Id {id} not found.");
+                }
+
+                await unitOfWork.TodoItemRepository.DeleteAsync(id);
+                await unitOfWork.CommitAsync();
+                return NoContent();
             }
-
-            context.ToDoItems.Remove(toDoItem);
-            await context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool ToDoItemExists(Guid id)
-        {
-            return context.ToDoItems.Any(e => e.Id == id);
+            catch (Exception ex)
+            {
+                // ToDo: Add logging
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+            }
         }
     }
 }

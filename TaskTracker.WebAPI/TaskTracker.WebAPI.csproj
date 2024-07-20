@@ -23,13 +23,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TaskTracker.BLL\TaskTracker.BLL.csproj" />
+    <ProjectReference Include="..\TaskTracker.DAL.EntityFramework\TaskTracker.DAL.EntityFramework.csproj" />
     <ProjectReference Include="..\TaskTracker.UI\TaskTracker.UI.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>
