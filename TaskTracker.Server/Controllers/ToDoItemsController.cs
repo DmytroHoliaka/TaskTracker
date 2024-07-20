@@ -68,7 +68,7 @@ namespace TaskTracker.Server.Controllers
             context.ToDoItems.Add(toDoItem);
             await context.SaveChangesAsync();
 
-            return CreatedAtAction("GetToDoItem", new { id = toDoItem.Id }, toDoItem);
+            return CreatedAtAction("GetTodoItem", new { id = toDoItem.Id }, toDoItem);
         }
 
         // DELETE: api/ToDoItems/5
