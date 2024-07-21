@@ -1,4 +1,4 @@
-﻿using TaskTracker.BLL.Models;
+﻿using TaskTracker.BLL.Models.DbSet;
 
 namespace TaskTracker.BLL.Abstractions;
 

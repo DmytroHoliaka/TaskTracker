@@ -1,52 +1,56 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Mono.TextTemplating;
 using TaskTracker.BLL.Abstractions;
 using TaskTracker.BLL.Models;
+using TaskTracker.BLL.Models.DbSet;
+using TaskTracker.BLL.Models.Dtos;
+using TaskTracker.BLL.Shared;
+using TaskTracker.BLL.TodoItems.Queries.GetAllTodoItems;
+using TaskTracker.BLL.TodoItems.Queries.GetTodoItemById;
+using TaskTracker.WebAPI.Abstractions;
 
 namespace TaskTracker.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TodoItemsController(IUnitOfWork unitOfWork, ILogger<TodoItemsController> logger) : ControllerBase
+    public class TodoItemsController(
+        IUnitOfWork unitOfWork, 
+        ILogger<TodoItemsController> logger, 
+        ISender sender,
+        IMapper mapper) 
+        : ApiController(sender)
     {
         // GET: api/ToDoItems
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItems()
+        public async Task<ActionResult<IEnumerable<TodoItemDto>>> GetTodoItems(CancellationToken cancellationToken = default)
         {
-            try
+            GetAllTodoItemsCommand command = new();
+            Result<IEnumerable<TodoItemDto>> result = await Sender.Send(command, cancellationToken);
+
+            return result switch
             {
-                IEnumerable<TodoItem> items = await unitOfWork.TodoItemRepository.GetAllAsync();
-                return Ok(items);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "An error occurred while retrieving todo items.");
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-            
+                { IsSuccess: true } => Ok(result.Value.Select(dto => mapper.Map<TodoItem>(dto))),
+                { Error.Code: TodoItemErrorCodes.DatabaseError } => StatusCode(StatusCodes.Status500InternalServerError, result.Error),
+                _ => StatusCode(StatusCodes.Status500InternalServerError, TodoItemsErrors.UnexpectedError)
+            };
         }
 
         // GET: api/ToDoItems/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TodoItem>> GetTodoItem(Guid id)
+        public async Task<ActionResult<TodoItemDto>> GetTodoItem(Guid id, CancellationToken cancellationToken)
         {
-            try
-            {
-                TodoItem? item = await unitOfWork.TodoItemRepository.GetByIdAsync(id);
+            GetTodoItemByIdCommand command = new(TodoItemId: id);
+            Result<TodoItemDto> result = await Sender.Send(command, cancellationToken);
 
-                if (item is null)
-                {
-                    return NotFound($"Todo item with Id {id} not found.");
-                }
-
-                return Ok(item);
-            }
-            catch (Exception ex)
+            return result switch
             {
-                logger.LogError(ex, "An error occurred while retrieving the todo item with Id {Id}.", id);
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
-            }
+                { IsSuccess: true } => Ok(result.Value),
+                { Error.Code: TodoItemErrorCodes.NoExists } => NotFound(result.Error),
+                { Error.Code: TodoItemErrorCodes.DatabaseError } => StatusCode(StatusCodes.Status500InternalServerError, result.Error),
+                _ => StatusCode(StatusCodes.Status500InternalServerError, TodoItemsErrors.UnexpectedError)
+            };
         }
 
         // PUT: api/ToDoItems/5
@@ -120,6 +124,24 @@ namespace TaskTracker.WebAPI.Controllers
                 logger.LogError(ex, "An error occurred while deleting the todo item with ID {Id}.", id);
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
+        }
+
+        // ToDo: Remove
+        [HttpGet("test")]
+        public IActionResult Test()
+        {
+            TodoItem originalModel = new(Guid.NewGuid(), "Incorrect mapping", States.Done);
+            TodoItemDto originalDto = new(Guid.NewGuid(), "Incorrect mapping", States.Done);
+
+            TodoItemDto dto = mapper.Map<TodoItemDto>(originalModel);
+            logger.LogDebug("{Title}", dto.Title);
+
+            TodoItem model = mapper.Map<TodoItem>(originalDto);
+            logger.LogDebug("{Title}", model.Title);
+
+            logger.LogError("Test error using Serilog");
+
+            return Ok();
         }
     }
 }

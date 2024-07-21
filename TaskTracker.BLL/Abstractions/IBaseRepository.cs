@@ -3,13 +3,13 @@
 public interface IBaseRepository<T>
     where T : class
 {
-    Task<IEnumerable<T>> GetAllAsync();
+    Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);
 
-    Task<T?> GetByIdAsync(Guid id);
+    Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    Task UpdateAsync(T toDoItem);
+    Task UpdateAsync(T toDoItem, CancellationToken cancellationToken = default);
 
-    Task CreateAsync(T toDoItem);
+    Task CreateAsync(T toDoItem, CancellationToken cancellationToken = default);
 
-    Task DeleteAsync(Guid id);
+    Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
 }

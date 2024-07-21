@@ -1,5 +1,5 @@
 ﻿using TaskTracker.BLL.Abstractions;
-using TaskTracker.BLL.Models;
+using TaskTracker.BLL.Models.DbSet;
 using TaskTracker.WebAPI.Controllers;
 
 namespace TaskTracker.DAL.EntityFramework.Repositories;

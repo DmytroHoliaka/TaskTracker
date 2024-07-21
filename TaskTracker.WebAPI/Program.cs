@@ -1,6 +1,8 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using TaskTracker.BLL.Abstractions;
+using TaskTracker.BLL.Profiles;
 using TaskTracker.DAL.EntityFramework;
 
 namespace TaskTracker.WebAPI;
@@ -28,15 +30,24 @@ public abstract class Program
         });
 
         builder.Services.AddControllers();
+
         builder.Services.AddEndpointsApiExplorer();
+
         builder.Services.AddSwaggerGen();
+        
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-        builder.Services.AddLogging(loggingBuilder =>
-            loggingBuilder.AddSerilog());
-
+        
+        builder.Services.AddMediatR(
+            config => config.RegisterServicesFromAssemblies(TaskTracker.BLL.AssemblyReference.Assembly));
+       
         builder.Host.UseSerilog((context, configuration) =>
             configuration.ReadFrom.Configuration(context.Configuration));
+
+        builder.Services.AddAutoMapper(config =>
+        {
+            config.AddProfile<TodoItemProfile>();
+            config.AddProfile<TodoItemDtoProfile>();
+        });
 
         var app = builder.Build();
 

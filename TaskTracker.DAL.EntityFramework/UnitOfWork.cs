@@ -19,23 +19,23 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     public ITodoItemRepository TodoItemRepository
         => _todoItemRepository ??= new TodoItemRepository(_context);
 
-    public async Task CommitAsync()
+    public async Task CommitAsync(CancellationToken cancellationToken = default)
     {
         try
         {
-            await _context.SaveChangesAsync();
-            await _transaction.CommitAsync();
+            await _context.SaveChangesAsync(cancellationToken);
+            await _transaction.CommitAsync(cancellationToken);
         }
         catch
         {
-            await RollbackAsync();
+            await RollbackAsync(cancellationToken);
             throw;
         }
     }
 
-    public async Task RollbackAsync()
+    public async Task RollbackAsync(CancellationToken cancellationToken = default)
     {
-        await _transaction.RollbackAsync();
+        await _transaction.RollbackAsync(cancellationToken);
     }
     
     public void Dispose()

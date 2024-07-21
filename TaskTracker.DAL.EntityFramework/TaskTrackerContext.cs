@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TaskTracker.BLL.Models;
+using TaskTracker.BLL.Models.DbSet;
 
 namespace TaskTracker.DAL.EntityFramework;
 
