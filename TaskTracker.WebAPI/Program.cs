@@ -37,7 +37,7 @@ public abstract class Program
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
         
         builder.Services.AddMediatR(
-            config => config.RegisterServicesFromAssemblies(TaskTracker.BLL.AssemblyReference.Assembly));
+            config => config.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
        
         builder.Host.UseSerilog((context, configuration) =>
             configuration.ReadFrom.Configuration(context.Configuration));
