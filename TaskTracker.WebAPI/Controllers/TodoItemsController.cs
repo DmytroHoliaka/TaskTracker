@@ -16,7 +16,7 @@ namespace TaskTracker.WebAPI.Controllers
     [ApiController]
     public class TodoItemsController(ISender sender) : ApiController(sender)
     {
-        // GET: api/ToDoItems
+        // GET: api/TodoItems
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoItemDto>>> GetTodoItems(
             CancellationToken cancellationToken = default)
@@ -37,7 +37,7 @@ namespace TaskTracker.WebAPI.Controllers
             };
         }
 
-        // GET: api/ToDoItems/5
+        // GET: api/TodoItems/5
         [HttpGet("{id}")]
         public async Task<ActionResult<TodoItemDto>> GetTodoItem(
             Guid id, 
@@ -62,7 +62,7 @@ namespace TaskTracker.WebAPI.Controllers
             };
         }
 
-        // PUT: api/ToDoItems/5
+        // PUT: api/TodoItems/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTodoItem(
             Guid id, 
@@ -95,7 +95,7 @@ namespace TaskTracker.WebAPI.Controllers
             };
         }
 
-        // POST: api/ToDoItems
+        // POST: api/TodoItems
         [HttpPost]
         public async Task<ActionResult<TodoItem>> PostTodoItem(
             TodoItemDto todoItemDto, 
@@ -122,7 +122,7 @@ namespace TaskTracker.WebAPI.Controllers
             };
         }
 
-        // DELETE: api/ToDoItems/5
+        // DELETE: api/TodoItems/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTodoItem(
             Guid id, 

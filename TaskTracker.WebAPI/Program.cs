@@ -64,7 +64,6 @@ public abstract class Program
 
         app.UseAuthorization();
 
-
         app.MapControllers();
 
         app.MapFallbackToFile("/index.html");
