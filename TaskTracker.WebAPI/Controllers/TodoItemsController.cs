@@ -77,11 +77,17 @@ namespace TaskTracker.WebAPI.Controllers
             UpdateTodoItemCommand command = new(todoItemDto);
             Result<TodoItemDto> result = await Sender.Send(command, cancellationToken);
 
+            if (result.IsFailure)
+            {
+                return HandleFailure(result);
+            }
+
             return result switch
             {
                 { IsSuccess: true } =>
                     Ok(result.Value),
-
+                
+                // ToDo: Decompose errors into ApiController
                 { Error.Code: TodoItemErrorCodes.DatabaseError } =>
                     StatusCode(StatusCodes.Status500InternalServerError, result.Error),
 
@@ -92,18 +98,24 @@ namespace TaskTracker.WebAPI.Controllers
 
         // POST: api/TodoItems
         [HttpPost]
-        public async Task<ActionResult<TodoItem>> PostTodoItem(
+        public async Task<IActionResult> PostTodoItem(
             TodoItemDto todoItemDto, 
             CancellationToken cancellationToken = default)
         {
             CreateTodoItemCommand command = new(todoItemDto);
             Result<TodoItemDto> result = await Sender.Send(command, cancellationToken);
+            
+            if (result.IsFailure)
+            {
+                return HandleFailure(result);
+            }
 
             return result switch
             {
                 { IsSuccess: true } =>
                     CreatedAtAction("GetTodoItem", new { id = result.Value.Id }, result.Value),
 
+                // ToDo: Decompose errors into ApiController
                 { Error.Code: TodoItemErrorCodes.DatabaseError } =>
                     StatusCode(StatusCodes.Status500InternalServerError, result.Error),
 

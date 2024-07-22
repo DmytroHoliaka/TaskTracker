@@ -1,6 +1,10 @@
+using FluentValidation;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using System.Globalization;
 using TaskTracker.BLL.Abstractions;
+using TaskTracker.BLL.Behaviours;
 using TaskTracker.BLL.Profiles;
 using TaskTracker.DAL.EntityFramework;
 
@@ -10,6 +14,8 @@ public abstract class Program
 {
     public static void Main(string[] args)
     {
+        // ToDo: Decompose configuration to diferences extention methods
+
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddDbContext<TaskTrackerContext>(
             options =>
@@ -46,6 +52,16 @@ public abstract class Program
         {
             config.AddProfile<TodoItemProfile>();
         });
+
+        builder.Services.AddScoped(
+            typeof(IPipelineBehavior<,>), 
+            typeof(ValidationPipelineBehavior<,>));
+
+        ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("en-US");
+
+        builder.Services.AddValidatorsFromAssembly(
+            TaskTracker.BLL.AssemblyReference.Assembly, 
+            includeInternalTypes: true);
 
         var app = builder.Build();
 
