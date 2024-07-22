@@ -74,11 +74,6 @@ namespace TaskTracker.WebAPI.Controllers
                 return BadRequest("Id in the URL doesn't match the Id in the payload.");
             }
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             UpdateTodoItemCommand command = new(todoItemDto);
             Result<TodoItemDto> result = await Sender.Send(command, cancellationToken);
 
@@ -101,11 +96,6 @@ namespace TaskTracker.WebAPI.Controllers
             TodoItemDto todoItemDto, 
             CancellationToken cancellationToken = default)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);  // ToDo: Check does IsValid works correctly in ASP.NET Web API
-            }
-
             CreateTodoItemCommand command = new(todoItemDto);
             Result<TodoItemDto> result = await Sender.Send(command, cancellationToken);
 
