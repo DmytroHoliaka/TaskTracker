@@ -46,7 +46,6 @@ public abstract class Program
         builder.Services.AddAutoMapper(config =>
         {
             config.AddProfile<TodoItemProfile>();
-            config.AddProfile<TodoItemDtoProfile>();
         });
 
         var app = builder.Build();

@@ -13,5 +13,11 @@ public class TodoItemProfile : Profile
                 dto => dto.Title,
                 config => config.MapFrom(model => $"Model to dto!!!: {model.Title}"))
             .ConstructUsing(model => new TodoItemDto(model.Id, model.Title, model.State));
+
+        CreateMap<TodoItemDto, TodoItem>()
+            .ForMember(
+                model => model.Title,
+                config => config.MapFrom(dto => $"Dto to model!!!: {dto.Title}"))
+            .ConstructUsing(dto => new TodoItem(dto.Id, dto.Title, dto.State));
     }
 }
