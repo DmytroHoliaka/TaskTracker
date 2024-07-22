@@ -4,7 +4,7 @@ public class TodoItemsErrors
 {
     public static readonly Error NoExists = new(
         TodoItemErrorCodes.NoExists, 
-        "Can't get non-existing item");
+        "TodoItem doesn't exists");
 
     public static readonly Error DatabaseError = new(
         TodoItemErrorCodes.DatabaseError, 

@@ -4,4 +4,4 @@ using TaskTracker.BLL.Shared;
 
 namespace TaskTracker.BLL.TodoItems.Queries.GetAllTodoItems;
 
-public sealed record GetAllTodoItemsCommand() : IRequest<Result<IEnumerable<TodoItemDto>>>;
+public sealed record GetAllTodoItemsQuery() : IRequest<Result<IEnumerable<TodoItemDto>>>;

@@ -8,13 +8,13 @@ using TaskTracker.BLL.Shared;
 
 namespace TaskTracker.BLL.TodoItems.Queries.GetAllTodoItems;
 
-public class GetAllTodoItemsCommandHandler(
+public class GetAllTodoItemsQueryHandler(
     IUnitOfWork unitOfWork, 
-    ILogger<GetAllTodoItemsCommandHandler> logger,
+    ILogger<GetAllTodoItemsQueryHandler> logger,
     IMapper mapper)
-    : IRequestHandler<GetAllTodoItemsCommand, Result<IEnumerable<TodoItemDto>>>
+    : IRequestHandler<GetAllTodoItemsQuery, Result<IEnumerable<TodoItemDto>>>
 {
-    public async Task<Result<IEnumerable<TodoItemDto>>> Handle(GetAllTodoItemsCommand request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<TodoItemDto>>> Handle(GetAllTodoItemsQuery request, CancellationToken cancellationToken)
     {
         try
         {
