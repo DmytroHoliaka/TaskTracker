@@ -87,6 +87,7 @@
   justify-content: space-between;
 }
 
+
 .status-block {
   height: min-content;
   width: 30%;
@@ -95,18 +96,44 @@
   box-shadow: 3px 3px 10px 2px rgba(0, 0, 0, 0.25);
   background-color: rgb(98, 50, 119);
   text-align: center;
-  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.status-block-drag {
+  background-color: rgb(139, 82, 163);
 }
 
 .list-title {
+  height: 50px;
+  width: 97.5%;
+  border-radius: 8px;
+  box-shadow: 5px 5px 5px 0 rgba(0, 0, 0, 0.25);
+
   font-family: "Alice", serif;
-  font-size: 25px;
+  font-size: 26px;
+
   color: rgb(255, 243, 224);
+
+  position: sticky;
+  top: 0;
+  background-color: rgb(57, 13, 75);
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.list-title-drag {
+  box-shadow: inset 0px 0px 8px 0px rgba(0, 0, 0, 1);
 }
 
 .task-block {
   padding-top: 10px;
-
+  width: 100%;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -141,7 +168,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
 
-  color: rgb(68, 19, 88);
+  color: rgb(57, 13, 75);
 }
 
 .icons {
@@ -152,7 +179,7 @@
 
 .icon {
   cursor: pointer;
-  color: rgb(68, 19, 88);
+  color: rgb(57, 13, 75);
   font-size: 26px;
 }
 
@@ -165,7 +192,7 @@
 
   font-family: "Alice", serif;
   font-size: 16px;
-  color: rgb(68, 19, 88);
+  color: rgb(57, 13, 75);
 
   border-radius: 5px;
   border: none;
@@ -175,10 +202,6 @@
 
 .edit-input:focus {
   outline: none;
-}
-
-.drag-over-todo, .drag-over-in-progress, .drag-over-done {
-  background-color: rgb(139, 82, 163);
 }
 
 .drag {

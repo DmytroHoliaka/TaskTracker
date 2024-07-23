@@ -28,10 +28,16 @@ const TodoList: React.FC<Props> = ({
             ref={provider.innerRef}
             {...provider.droppableProps}
             className={`status-block ${
-              snapshot.isDraggingOver ? "drag-over-todo" : ""
+              snapshot.isDraggingOver ? "status-block-drag" : ""
             }`}
           >
-            <span className="list-title">To do</span>
+            <div
+              className={`list-title ${
+                snapshot.isDraggingOver ? "list-title-drag" : ""
+              }`}
+            >
+              To do
+            </div>
             <div className="task-block">
               {todoTasks?.map((task, index) => (
                 <SingleTodo
@@ -54,10 +60,16 @@ const TodoList: React.FC<Props> = ({
             ref={provider.innerRef}
             {...provider.droppableProps}
             className={`status-block ${
-              snapshot.isDraggingOver ? "drag-over-in-progress" : ""
+              snapshot.isDraggingOver ? "status-block-drag" : ""
             }`}
           >
-            <span className="list-title">In progress</span>
+            <div
+              className={`list-title ${
+                snapshot.isDraggingOver ? "list-title-drag" : ""
+              }`}
+            >
+              In progress
+            </div>
             <div className="task-block">
               {inProgressTasks?.map((task, index) => (
                 <SingleTodo
@@ -80,10 +92,16 @@ const TodoList: React.FC<Props> = ({
             ref={provider.innerRef}
             {...provider.droppableProps}
             className={`status-block ${
-              snapshot.isDraggingOver ? "drag-over-done" : ""
+              snapshot.isDraggingOver ? "status-block-drag" : ""
             }`}
           >
-            <span className="list-title">Done</span>
+            <div
+              className={`list-title ${
+                snapshot.isDraggingOver ? "list-title-drag" : ""
+              }`}
+            >
+              Done
+            </div>
             <div className="task-block">
               {doneTasks?.map((task, index) => (
                 <SingleTodo
