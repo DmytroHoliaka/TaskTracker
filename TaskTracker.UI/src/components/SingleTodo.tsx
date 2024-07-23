@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import TodoItem from "../models/TodoItem";
 import { MdDelete, MdEdit } from "react-icons/md";
+import { IoCheckmarkDoneSharp } from "react-icons/io5";
 import "./styles.css";
 import { Draggable } from "react-beautiful-dnd";
 import { DeleteTask, UpdateTask } from "../services/requests";
@@ -22,20 +23,21 @@ const SingleTodo: React.FC<Props> = ({ arrayIndex, task, tasks, setTasks }) => {
     const newTask: TodoItem = {
       id: task.id,
       title: newTitle,
-      state: task.state
+      state: task.state,
     };
 
-    if (task.title !== newTask.title && await UpdateTask(newTask.id, newTask)){
-      setTasks(
-        tasks.map((t) => (t.id === task.id ? newTask : t))
-      );
-  
-      setIsEditMode(false);
+    if (
+      task.title !== newTask.title &&
+      (await UpdateTask(newTask.id, newTask))
+    ) {
+      setTasks(tasks.map((t) => (t.id === task.id ? newTask : t)));
     }
+
+    setIsEditMode(false);
   };
 
   const handleDelete = async (): Promise<void> => {
-    if (await DeleteTask(task.id)){
+    if (await DeleteTask(task.id)) {
       setTasks(tasks.filter((t) => t.id !== task.id));
     }
   };
@@ -73,7 +75,7 @@ const SingleTodo: React.FC<Props> = ({ arrayIndex, task, tasks, setTasks }) => {
               }}
               className="icon"
             >
-              {<MdEdit />}
+              {isEditMode === true ? <IoCheckmarkDoneSharp /> : <MdEdit />}
             </span>
             <span onClick={() => handleDelete()} className="icon">
               {<MdDelete />}
