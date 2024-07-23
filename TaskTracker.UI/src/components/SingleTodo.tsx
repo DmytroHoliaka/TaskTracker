@@ -56,6 +56,7 @@ const SingleTodo: React.FC<Props> = ({ arrayIndex, task, tasks, setTasks }) => {
               value={newTitle}
               placeholder="Edit new task..."
               onChange={(e) => setNewTitle(e.target.value)}
+              maxLength={32}
               className="edit-input"
             ></input>
           ) : (

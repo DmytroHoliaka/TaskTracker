@@ -28,6 +28,7 @@ const InputForm: React.FC<Props> = ({
         value={taskTitle}
         onChange={(e) => setTaskTitle(e.target.value)}
         ref={inputRef}
+        maxLength={32}
         className="input__box"
       ></input>
       <button type="submit" className="input__submit">

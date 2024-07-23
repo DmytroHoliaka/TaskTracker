@@ -137,6 +137,10 @@
   font-size: 18px;
   font-family: "Alice", serif;
 
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
   color: rgb(68, 19, 88);
 }
 
