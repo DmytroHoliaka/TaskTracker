@@ -1,16 +1,20 @@
 ﻿namespace TaskTracker.BLL.Shared;
 
-public class TodoItemsErrors
+public static class TodoItemsErrors
 {
     public static readonly Error NoExists = new(
-        TodoItemErrorCodes.NoExists, 
+        ErrorCodes.NoExists, 
         "TodoItem doesn't exists");
 
     public static readonly Error DatabaseError = new(
-        TodoItemErrorCodes.DatabaseError, 
+        ErrorCodes.DatabaseError, 
         "An exception occurred while working with the database");
 
     public static readonly Error UnexpectedError = new(
-        TodoItemErrorCodes.UnexpectedError,
+        ErrorCodes.UnexpectedError,
         "An unexpected error occurred.");
+
+    public static readonly Error ValidationError = new(
+        ErrorCodes.ValidationError,
+        "A validation problem occured.");
 }

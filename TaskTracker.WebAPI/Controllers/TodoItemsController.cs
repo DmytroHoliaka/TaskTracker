@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using TaskTracker.BLL.Models.DbSet;
 using TaskTracker.BLL.Models.Dtos;
 using TaskTracker.BLL.Shared;
 using TaskTracker.BLL.TodoItems.Commands.CreateTodoItem;
@@ -18,48 +17,35 @@ namespace TaskTracker.WebAPI.Controllers
     {
         // GET: api/TodoItems
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TodoItemDto>>> GetTodoItems(
+        public async Task<IActionResult> GetTodoItems(
             CancellationToken cancellationToken = default)
         {
             GetAllTodoItemsQuery query = new();
             Result<IEnumerable<TodoItemDto>> result = await Sender.Send(query, cancellationToken);
 
-            return result switch
+            if (result.IsFailure)
             {
-                { IsSuccess: true } =>
-                    Ok(result.Value),
+                return HandleFailure(result);
+            }
 
-                { Error.Code: TodoItemErrorCodes.DatabaseError } =>
-                    StatusCode(StatusCodes.Status500InternalServerError, result.Error),
-
-                _ =>
-                    StatusCode(StatusCodes.Status500InternalServerError, TodoItemsErrors.UnexpectedError)
-            };
+            return Ok(result.Value);
         }
 
         // GET: api/TodoItems/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TodoItemDto>> GetTodoItem(
+        public async Task<IActionResult> GetTodoItem(
             Guid id, 
             CancellationToken cancellationToken = default)
         {
             GetTodoItemByIdQuery query = new(TodoItemId: id);
             Result<TodoItemDto> result = await Sender.Send(query, cancellationToken);
 
-            return result switch
+            if (result.IsFailure)
             {
-                { IsSuccess: true } =>
-                    Ok(result.Value),
+                return HandleFailure(result);
+            }
 
-                { Error.Code: TodoItemErrorCodes.NoExists } =>
-                    NotFound(result.Error),
-
-                { Error.Code: TodoItemErrorCodes.DatabaseError } =>
-                    StatusCode(StatusCodes.Status500InternalServerError, result.Error),
-
-                _ =>
-                    StatusCode(StatusCodes.Status500InternalServerError, TodoItemsErrors.UnexpectedError)
-            };
+            return Ok(result.Value);
         }
 
         // PUT: api/TodoItems/5
@@ -82,18 +68,7 @@ namespace TaskTracker.WebAPI.Controllers
                 return HandleFailure(result);
             }
 
-            return result switch
-            {
-                { IsSuccess: true } =>
-                    Ok(result.Value),
-                
-                // ToDo: Decompose errors into ApiController
-                { Error.Code: TodoItemErrorCodes.DatabaseError } =>
-                    StatusCode(StatusCodes.Status500InternalServerError, result.Error),
-
-                _ =>
-                    StatusCode(StatusCodes.Status500InternalServerError, TodoItemsErrors.UnexpectedError)
-            };
+            return Ok(result.Value);
         }
 
         // POST: api/TodoItems
@@ -110,18 +85,7 @@ namespace TaskTracker.WebAPI.Controllers
                 return HandleFailure(result);
             }
 
-            return result switch
-            {
-                { IsSuccess: true } =>
-                    CreatedAtAction("GetTodoItem", new { id = result.Value.Id }, result.Value),
-
-                // ToDo: Decompose errors into ApiController
-                { Error.Code: TodoItemErrorCodes.DatabaseError } =>
-                    StatusCode(StatusCodes.Status500InternalServerError, result.Error),
-
-                _ =>
-                    StatusCode(StatusCodes.Status500InternalServerError, TodoItemsErrors.UnexpectedError)
-            };
+            return CreatedAtAction("GetTodoItem", new { id = result.Value.Id }, result.Value);
         }
 
         // DELETE: api/TodoItems/5
@@ -133,20 +97,12 @@ namespace TaskTracker.WebAPI.Controllers
             DeleteTodoItemCommand command = new(id);
             Result<TodoItemDto> result = await Sender.Send(command, cancellationToken);
 
-            return result switch
+            if (result.IsFailure)
             {
-                { IsSuccess: true } =>
-                    NoContent(),
+                return HandleFailure(result);
+            }
 
-                { Error.Code: TodoItemErrorCodes.NoExists } =>
-                    NotFound(result.Error),
-
-                { Error.Code: TodoItemErrorCodes.DatabaseError } =>
-                    StatusCode(StatusCodes.Status500InternalServerError, result.Error),
-
-                _ =>
-                    StatusCode(StatusCodes.Status500InternalServerError, TodoItemsErrors.UnexpectedError),
-            };
+            return NoContent();
         }
     }
 }

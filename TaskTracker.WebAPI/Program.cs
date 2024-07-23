@@ -7,6 +7,7 @@ using TaskTracker.BLL.Abstractions;
 using TaskTracker.BLL.Behaviours;
 using TaskTracker.BLL.Profiles;
 using TaskTracker.DAL.EntityFramework;
+using TaskTracker.WebAPI.ServiceExtensions;
 
 namespace TaskTracker.WebAPI;
 
@@ -14,59 +15,20 @@ public abstract class Program
 {
     public static void Main(string[] args)
     {
-        // ToDo: Decompose configuration to diferences extention methods
-
         var builder = WebApplication.CreateBuilder(args);
-        builder.Services.AddDbContext<TaskTrackerContext>(
-            options =>
-                options.UseSqlServer(
-                    builder.Configuration.GetConnectionString("TaskTrackerContext") ??
-                    throw new InvalidOperationException("Connection string 'TaskTrackerContext' not found.")));
 
-        builder.Services.AddCors(options =>
-        {
-            options.AddDefaultPolicy(
-                policy =>
-                {
-                    policy.WithOrigins("https://localhost:5173");
-                    policy.AllowAnyHeader();
-                    policy.AllowAnyMethod();
-                });
-        });
+        builder.Services
+            .AddDbContextConfiguration(builder.Configuration)
+            .AddCorsConfiguration()
+            .AddCommonServices()
+            .AddMediatRConfiguration()
+            .AddAutoMapperConfiguration()
+            .AddFluentValidationConfiguration()
+            .AddCustomConfiguration();
 
-        builder.Services.AddControllers();
-
-        builder.Services.AddEndpointsApiExplorer();
-
-        builder.Services.AddSwaggerGen();
-        
-        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-        
-        builder.Services.AddMediatR(
-            config => config.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
-       
-        builder.Host.UseSerilog((context, configuration) =>
-            configuration.ReadFrom.Configuration(context.Configuration));
-
-        builder.Services.AddAutoMapper(config =>
-        {
-            config.AddProfile<TodoItemProfile>();
-        });
-
-        builder.Services.AddScoped(
-            typeof(IPipelineBehavior<,>), 
-            typeof(ValidationPipelineBehavior<,>));
-
-        ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("en-US");
-
-        builder.Services.AddValidatorsFromAssembly(
-            TaskTracker.BLL.AssemblyReference.Assembly, 
-            includeInternalTypes: true);
+        builder.Host.AddSerilogConfiguration();
 
         var app = builder.Build();
-
-        app.UseDefaultFiles();
-        app.UseStaticFiles();
 
         if (app.Environment.IsDevelopment())
         {

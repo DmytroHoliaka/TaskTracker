@@ -6,9 +6,9 @@ namespace TaskTracker.DAL.EntityFramework;
 
 public class UnitOfWork : IUnitOfWork, IDisposable
 {
-    private IDbContextTransaction _transaction;
-    private TodoItemRepository _todoItemRepository;
-    private TaskTrackerContext _context;
+    private readonly IDbContextTransaction _transaction;
+    private readonly TaskTrackerContext _context;
+    private TodoItemRepository? _todoItemRepository;
 
     public UnitOfWork(TaskTrackerContext context)
     {
@@ -24,7 +24,7 @@ public class UnitOfWork : IUnitOfWork, IDisposable
         try
         {
             await _context.SaveChangesAsync(cancellationToken);
-            await _transaction.CommitAsync(cancellationToken);
+            await _transaction.CommitAsync(cancellationToken);  // ToDo: Fix warning
         }
         catch
         {

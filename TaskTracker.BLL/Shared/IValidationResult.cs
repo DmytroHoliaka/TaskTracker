@@ -2,9 +2,8 @@
 
 public interface IValidationResult
 {
-    // ToDo: Specify predefined error
     public static readonly Error ValidationError = new(
-        code: "ValidationError",
+        ErrorCodes.ValidationError,
         "A validation problem occured.");
 
     Error[] Errors { get; }
