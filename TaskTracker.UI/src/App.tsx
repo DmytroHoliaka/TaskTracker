@@ -4,8 +4,14 @@ import InputForm from "./components/InputForm";
 import TodoItem from "./models/TodoItem";
 import TodoList from "./components/TodoList";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
-import { CreateTask, fetchTasks, UpdateTask } from "./services/requests";
+import {
+  CreateTask,
+  DeleteTask,
+  fetchTasks,
+  UpdateTask,
+} from "./services/requests";
 import States from "./models/States";
+import DeleteConfirmationModal from "./components/DeleteConfirmationModal";
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -38,6 +44,40 @@ const App: React.FC = () => {
   const [todoTasks, setTodoTasks] = useState<TodoItem[]>([]);
   const [inProgressTasks, setInProgressTasks] = useState<TodoItem[]>([]);
   const [doneTasks, setDoneTasks] = useState<TodoItem[]>([]);
+
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [taskToDelete, setTaskToDelete] = useState<TodoItem | null>(null);
+  const [taskArray, setTaskArray] = useState<TodoItem[]>([]);
+  const [changeTaskArray, setChangeTaskArray] =
+    useState<React.Dispatch<React.SetStateAction<TodoItem[]>>>();
+
+  const openModal = (
+    taskToDelete: TodoItem,
+    currentTaskArray: TodoItem[],
+    currentSetTaskArray: React.Dispatch<React.SetStateAction<TodoItem[]>>
+  ): void => {
+    setIsModalOpen(true);
+    setTaskToDelete(taskToDelete);
+    setTaskArray([...currentTaskArray]);
+    setChangeTaskArray(() => currentSetTaskArray);
+  };
+
+  const closeModal = (): void => {
+    setIsModalOpen(false);
+    setTaskToDelete(null);
+  };
+
+  const confirmDelete = async (): Promise<void> => {
+    if (
+      taskToDelete &&
+      taskArray &&
+      changeTaskArray &&
+      (await DeleteTask(taskToDelete.id))
+    ) {
+      changeTaskArray(taskArray.filter((task) => task.id !== taskToDelete.id));
+      closeModal();
+    }
+  };
 
   const handleCreate = async (
     e: React.FormEvent<HTMLFormElement>
@@ -112,7 +152,7 @@ const App: React.FC = () => {
 
     let shouldSwap = true;
 
-    if (initialTask.state !== newTask.state){
+    if (initialTask.state !== newTask.state) {
       shouldSwap = await UpdateTask(newTask.id, newTask);
     }
 
@@ -129,7 +169,7 @@ const App: React.FC = () => {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="app">
+      <div className="app relative-container">
         <div className="upper-container">
           <div className="header-block">
             <span className="header">Task Tracker</span>
@@ -142,6 +182,7 @@ const App: React.FC = () => {
             />
           </div>
         </div>
+
         <div className="lower-container">
           <TodoList
             todoTasks={todoTasks}
@@ -150,7 +191,19 @@ const App: React.FC = () => {
             setInProgressTasks={setInProgressTasks}
             doneTasks={doneTasks}
             setDoneTasks={setDoneTasks}
+            openModal={openModal}
           />
+        </div>
+
+        <div className={`modal-overlay ${isModalOpen ? "active" : ""}`}>
+          {
+            <DeleteConfirmationModal
+              isOpen={isModalOpen}
+              onClose={closeModal}
+              onConfirm={confirmDelete}
+              task={taskToDelete}
+            />
+          }
         </div>
       </div>
     </DragDropContext>

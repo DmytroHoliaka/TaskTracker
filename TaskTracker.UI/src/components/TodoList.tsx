@@ -10,6 +10,11 @@ interface Props {
   setInProgressTasks: React.Dispatch<React.SetStateAction<TodoItem[]>>;
   doneTasks: TodoItem[];
   setDoneTasks: React.Dispatch<React.SetStateAction<TodoItem[]>>;
+  openModal: (
+    task: TodoItem,
+    taskArray: TodoItem[],
+    setTaskArray: React.Dispatch<React.SetStateAction<TodoItem[]>>
+  ) => void;
 }
 
 const TodoList: React.FC<Props> = ({
@@ -19,9 +24,10 @@ const TodoList: React.FC<Props> = ({
   setInProgressTasks,
   doneTasks,
   setDoneTasks,
+  openModal,
 }) => {
   return (
-    <div className="list-container">
+    <div className="list-container relative-container">
       <Droppable droppableId="TodoBlock">
         {(provider, snapshot) => (
           <div
@@ -45,6 +51,7 @@ const TodoList: React.FC<Props> = ({
                   task={task}
                   tasks={todoTasks}
                   setTasks={setTodoTasks}
+                  openModal={openModal}
                   key={task.id} // System property
                 />
               ))}
@@ -77,6 +84,7 @@ const TodoList: React.FC<Props> = ({
                   task={task}
                   tasks={inProgressTasks}
                   setTasks={setInProgressTasks}
+                  openModal={openModal}
                   key={task.id} // System property
                 />
               ))}
@@ -109,6 +117,7 @@ const TodoList: React.FC<Props> = ({
                   task={task}
                   tasks={doneTasks}
                   setTasks={setDoneTasks}
+                  openModal={openModal}
                   key={task.id} // System property
                 />
               ))}
