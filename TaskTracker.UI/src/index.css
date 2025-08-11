@@ -1,0 +1,21 @@
+body {
+  margin: 0;
+}
+
+button:hover {
+  background-color: rgb(212, 179, 126);
+  cursor: pointer;
+}
+
+button:active {
+  background-color: rgb(180, 145, 87);
+  transform: scale(0.95);
+}
+
+button {
+  border: none;
+  background-color: rgb(231, 199, 147);
+  font-family: "Alice", serif;
+  font-size: 15px;
+  color: rgb(57, 13, 75);
+}

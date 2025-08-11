@@ -1,0 +1,133 @@
+import React from "react";
+import TodoItem from "../models/TodoItem";
+import SingleTodo from "./SingleTodo";
+import { Droppable } from "react-beautiful-dnd";
+
+interface Props {
+  todoTasks: TodoItem[];
+  setTodoTasks: React.Dispatch<React.SetStateAction<TodoItem[]>>;
+  inProgressTasks: TodoItem[];
+  setInProgressTasks: React.Dispatch<React.SetStateAction<TodoItem[]>>;
+  doneTasks: TodoItem[];
+  setDoneTasks: React.Dispatch<React.SetStateAction<TodoItem[]>>;
+  openModal: (
+    task: TodoItem,
+    taskArray: TodoItem[],
+    setTaskArray: React.Dispatch<React.SetStateAction<TodoItem[]>>
+  ) => void;
+}
+
+const TodoList: React.FC<Props> = ({
+  todoTasks,
+  setTodoTasks,
+  inProgressTasks,
+  setInProgressTasks,
+  doneTasks,
+  setDoneTasks,
+  openModal,
+}) => {
+  return (
+    <div className="list-container relative-container">
+      <Droppable droppableId="TodoBlock">
+        {(provider, snapshot) => (
+          <div
+            ref={provider.innerRef}
+            {...provider.droppableProps}
+            className={`status-block ${
+              snapshot.isDraggingOver ? "status-block-drag" : ""
+            }`}
+          >
+            <div
+              className={`list-title ${
+                snapshot.isDraggingOver ? "list-title-drag" : ""
+              }`}
+            >
+              To do
+            </div>
+            <div className="task-block">
+              {todoTasks?.map((task, index) => (
+                <SingleTodo
+                  arrayIndex={index}
+                  task={task}
+                  tasks={todoTasks}
+                  setTasks={setTodoTasks}
+                  openModal={openModal}
+                  key={task.id} // System property
+                />
+              ))}
+            </div>
+            {provider.placeholder}
+          </div>
+        )}
+      </Droppable>
+
+      <Droppable droppableId="InProgressBlock">
+        {(provider, snapshot) => (
+          <div
+            ref={provider.innerRef}
+            {...provider.droppableProps}
+            className={`status-block ${
+              snapshot.isDraggingOver ? "status-block-drag" : ""
+            }`}
+          >
+            <div
+              className={`list-title ${
+                snapshot.isDraggingOver ? "list-title-drag" : ""
+              }`}
+            >
+              In progress
+            </div>
+            <div className="task-block">
+              {inProgressTasks?.map((task, index) => (
+                <SingleTodo
+                  arrayIndex={index}
+                  task={task}
+                  tasks={inProgressTasks}
+                  setTasks={setInProgressTasks}
+                  openModal={openModal}
+                  key={task.id} // System property
+                />
+              ))}
+            </div>
+            {provider.placeholder}
+          </div>
+        )}
+      </Droppable>
+
+      <Droppable droppableId="DoneBlock">
+        {(provider, snapshot) => (
+          <div
+            ref={provider.innerRef}
+            {...provider.droppableProps}
+            className={`status-block ${
+              snapshot.isDraggingOver ? "status-block-drag" : ""
+            }`}
+          >
+            <div
+              className={`list-title ${
+                snapshot.isDraggingOver ? "list-title-drag" : ""
+              }`}
+            >
+              Done
+            </div>
+            <div className="task-block">
+              {doneTasks?.map((task, index) => (
+                <SingleTodo
+                  arrayIndex={index}
+                  task={task}
+                  tasks={doneTasks}
+                  setTasks={setDoneTasks}
+                  openModal={openModal}
+                  key={task.id} // System property
+                />
+              ))}
+            </div>
+            {provider.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </div>
+  );
+};
+
+export default TodoList;

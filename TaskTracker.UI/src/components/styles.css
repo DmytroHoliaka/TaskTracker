@@ -1,0 +1,253 @@
+@import url("https://fonts.googleapis.com/css2?family=Alice&display=swap");
+
+.header-block {
+  height: 40%;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.input-block {
+  height: 60%;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: top;
+}
+
+.header {
+  font-family: "Alice", serif;
+  font-size: 35px;
+  color: #fff3e0;
+  justify-content: center;
+  align-items: center;
+}
+
+.input {
+  width: 60%;
+
+  display: flex;
+  align-items: top;
+
+  position: relative;
+}
+
+.input__box {
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+
+  padding: 0 100px 0 20px;
+  height: 40px;
+  font-size: 18px;
+  font-family: "Alice", serif;
+
+  transition: 0.2s;
+  box-shadow: inset 0 0 10px 3px rgba(0, 0, 0, 0.25);
+}
+
+.input__box:focus {
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.25);
+  outline: none;
+}
+
+.input__submit {
+  width: 80px;
+  height: 40px;
+  border-radius: 7px;
+  position: absolute;
+  right: 0px;
+  border: none;
+
+  box-shadow: inset 4px 4px 15px 2px rgba(0, 0, 0, 0.25);
+}
+
+.list-container {
+  width: 90%;
+
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.status-block {
+  height: min-content;
+  width: 30%;
+  border-radius: 8px;
+  padding: 10px 15px;
+  box-shadow: 3px 3px 10px 2px rgba(0, 0, 0, 0.25);
+  background-color: rgb(98, 50, 119);
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.status-block-drag {
+  background-color: rgb(139, 82, 163);
+}
+
+.list-title {
+  height: 50px;
+  width: 97.5%;
+  border-radius: 8px;
+  box-shadow: 5px 5px 5px 0 rgba(0, 0, 0, 0.25);
+
+  font-family: "Alice", serif;
+  font-size: 26px;
+
+  color: rgb(255, 243, 224);
+
+  position: sticky;
+  top: 0;
+  background-color: rgb(57, 13, 75);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.list-title-drag {
+  box-shadow: inset 0px 0px 8px 0px rgba(0, 0, 0, 1);
+}
+
+.task-block {
+  padding-top: 10px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  background-color: rgb(0, 0, 0, 0);
+}
+
+.task-item {
+  margin: 10px;
+  width: 90%;
+  height: 60px;
+  border-radius: 8px;
+
+  background-color: rgb(231, 199, 147);
+  box-shadow: inset 0 0 15px 5px rgba(0, 0, 0, 0.25);
+  cursor: grab;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.task-title {
+  flex: 1;
+  padding: 0 20px;
+
+  text-align: left;
+  font-size: 18px;
+  font-family: "Alice", serif;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  color: rgb(57, 13, 75);
+}
+
+.icons {
+  display: flex;
+  padding: 0 20px;
+  gap: 5px;
+}
+
+.icon {
+  cursor: pointer;
+  color: rgb(57, 13, 75);
+  font-size: 26px;
+}
+
+.edit-input {
+  flex: 1;
+  height: 24px;
+
+  margin-left: 20px;
+  padding: 0 20px;
+
+  font-family: "Alice", serif;
+  font-size: 16px;
+  color: rgb(57, 13, 75);
+
+  border-radius: 5px;
+  border: none;
+
+  box-shadow: inset 1px 1px 6px 1px rgba(0, 0, 0, 0.25);
+}
+
+.edit-input:focus {
+  outline: none;
+}
+
+.drag {
+  box-shadow: inset 0px 0px 15px 0px rgba(0, 0, 0, 1);
+}
+
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 33%;
+  height: min-content;
+  z-index: 10;
+
+  border-radius: 8px;
+  background-color: rgb(255, 243, 224);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.relative-container {
+  position: relative;
+}
+
+.modal-content-icon {
+  font-size: 80px;
+  color: rgb(197, 12, 12);
+  display: flex;
+  padding-bottom: 20px;
+}
+
+.modal-content-title {
+  color: rgb(57, 13, 75);
+  font-size: 24px;
+  font-family: "Alice", serif;
+  font-weight: bold;
+}
+
+.modal-content-description {
+  color: rgb(57, 13, 75);
+  font-size: 20px;
+  font-family: "Alice", serif;
+  text-align: center;
+}
+
+.modal-content-delete-buttons {
+  width: 100%;
+  padding-top: 10px;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-content-delete-button {
+  height: 35px;
+  width: 70px;
+  border-radius: 4px;
+
+  box-shadow: inset 0px 0px 15px 2px rgba(0, 0, 0, 0.25);
+}
